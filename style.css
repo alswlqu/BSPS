@@ -1,0 +1,298 @@
+/* Reset & 기본 */
+* { box-sizing: border-box; margin:0; padding:0; }
+html,body { height:100%; }
+body {
+  font-family: "Pretendard", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:#111;
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 헤더 (투명 -> 흰색 sticky 처리) */
+header.site-header {
+  position: fixed;
+  left: 0; top: 0;
+  width: 100%;
+  padding: 12px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1000;
+  background: transparent;
+  transition: background 240ms ease, box-shadow 240ms ease, backdrop-filter 240ms ease;
+}
+header.site-header.scrolled {
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  backdrop-filter: blur(4px);
+}
+header .logo {
+  font-weight:700;
+  font-size:1.2rem;
+  letter-spacing: -0.5px;
+  cursor:pointer;
+}
+header .main-nav {
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+header .nav-item {
+  text-decoration:none;
+  color:#111;
+  font-size:0.82rem;
+  letter-spacing:2px;
+  font-weight:600;
+}
+header .hamburger {
+  background:none;
+  border:0;
+  font-size:1.2rem;
+  cursor:pointer;
+}
+
+/* COVER (초기 화면) */
+#cover {
+  width:100%;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:#fff;
+}
+.cover-inner { padding: 24px; max-width:920px; }
+.cover-title {
+  font-size: clamp(28px, 6vw, 56px);
+  line-height:1.05;
+  font-weight:800;
+  margin-bottom:10px;
+}
+.cover-sub {
+  color:#666;
+  margin-bottom:24px;
+  font-size:1rem;
+}
+.start-btn {
+  border: 2px solid #111;
+  background: transparent;
+  padding:10px 18px;
+  font-weight:700;
+  cursor:pointer;
+  border-radius:8px;
+  transition: background .18s, color .18s, transform .12s;
+}
+.start-btn:hover {
+  background:#111;
+  color:#fff;
+  transform:translateY(-3px);
+}
+
+/* 숨김클래스 */
+.hidden { display:none !important; }
+
+/* 3x3 그리드 섹션 */
+.grid-section {
+  padding: 110px 6vw 80px;
+  min-height:100vh;
+}
+.grid-inner {
+  max-width:1200px;
+  margin: 0 auto;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:28px;
+  align-items:start;
+}
+.month-card {
+  display:block;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  background:#f7f7f7;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.month-card:active,
+.month-card:focus {
+  transform: translateY(1px) scale(.998);
+}
+.month-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.09);
+}
+
+.card-thumb {
+  display:block;
+  width:100%;
+  height:260px;
+  object-fit:cover;
+  background: linear-gradient(180deg,#efefef,#ddd); /* 이미지 로드 전 플레이스홀더 */
+}
+.card-meta {
+  padding:14px 16px;
+}
+.card-meta h3 {
+  font-size:1.15rem;
+  margin-bottom:6px;
+}
+.card-meta p {
+  color:#444;
+  font-size:0.95rem;
+}
+
+/* 빈 칸(3x3 맞추기) */
+.grid-spacer { visibility:hidden; height:0; }
+
+/* 월 갤러리 (모달처럼 화면 덮기) */
+.month-gallery {
+  position: fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.85);
+  z-index:2000;
+  padding: 40px 24px;
+}
+.month-gallery .close-gallery {
+  position: absolute;
+  right:30px;
+  top:30px;
+  background:transparent;
+  border:0;
+  color:#fff;
+  font-size:28px;
+  cursor:pointer;
+}
+
+/* 기존 slider는 데이터용 → 화면에서는 숨김 */
+.month-gallery .slider {
+  display:none;
+}
+
+/* 큰 이미지 뷰어 */
+.month-gallery .image-viewer {
+  max-width: min(1000px, 96%);
+  max-height: 70vh;
+  margin-bottom: 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.month-gallery .image-viewer img {
+  display:block;
+  max-width:100%;
+  max-height:70vh;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* 한 줄 설명 */
+.month-gallery .image-desc {
+  max-width: min(1000px, 96%);
+  margin-bottom: 14px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.7);
+  color:#fff;
+  font-size:0.9rem;
+  line-height:1.4;
+  text-align:left;
+}
+
+/* 썸네일 그리드 */
+.month-gallery .image-grid {
+  width: min(1000px, 96%);
+  max-height: 40vh;
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap:12px;
+  overflow-y:auto;
+}
+.month-gallery .thumb-item {
+  background:transparent;
+  border:0;
+  padding:0;
+  border-radius:8px;
+  overflow:hidden;
+  cursor:pointer;
+}
+.month-gallery .thumb-item img {
+  display:block;
+  width:100%;
+  height:180px; /* 썸네일을 조금 더 크게 */
+  object-fit:cover;
+}
+
+/* 하단 작은 썸네일 리스트 (현재는 사용하지 않아도 됨, 원본에서 유지) */
+.month-gallery .thumbs {
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding:8px 4px;
+}
+.month-gallery .thumbs img {
+  width:72px;
+  height:48px;
+  object-fit:cover;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+/* 반응형 */
+@media (max-width: 980px) {
+  .grid-inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap:18px;
+  }
+  .card-thumb { height:220px; }
+}
+
+@media (max-width: 600px) {
+  .grid-inner {
+    grid-template-columns: 1fr;
+  }
+  .card-thumb { height:180px; }
+  header.site-header { padding:10px 14px; }
+  .cover-sub { font-size:0.95rem; }
+
+  .month-gallery {
+    padding: 24px 12px;
+  }
+  .month-gallery .thumb-item img {
+    height:150px; /* 모바일에서는 살짝 줄이기 */
+  }
+}
+
+/* LP판 + 유튜브 영상 영역 */
+.month-gallery .video-lp {
+  max-width: min(360px, 80vw);
+  aspect-ratio: 1 / 1;           /* 정사각형 */
+  margin-bottom: 18px;
+  position: relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  /* 🔥 여기 배경 LP 이미지 경로를 네가 저장한 파일로 바꿔줘! */
+  background-image: url("lp-record.jpeg"); /* 예: 프로젝트 폴더에 lp-record.png 추가 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* LP판 위에 올라가는 유튜브 iframe */
+.month-gallery .video-lp iframe,
+.month-gallery .video-lp .video-frame {
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  border: 0;
+  border-radius: 50%;     /* 동그랗게 잘라서 LP 중앙 느낌 */
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+}

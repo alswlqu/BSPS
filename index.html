@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>복세편살</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- 폰트는 필요하면 추가하세요 -->
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo" id="logoBtn">복세편살</div>
+      <nav class="main-nav" aria-label="Main">
+        <a href="#" class="nav-item">PROJECTS</a>
+        <a href="#" class="nav-item">STUDIO</a>
+        <a href="#" class="nav-item">CONTACT</a>
+        <button class="hamburger" aria-label="menu">☰</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- COVER / START SCREEN -->
+  <main id="main">
+    <section id="cover" class="cover">
+      <div class="cover-inner">
+        <h1 class="cover-title">복잡한 세상, 편하게 살자</h1>
+        <p class="cover-sub">신입생으로 보낸 1년 돌아보기 (2025)</p>
+        <button id="startBtn" class="start-btn" aria-label="사이트 시작">클릭하여 시작</button>
+      </div>
+    </section>
+
+    <!-- GRID SECTION: 3x3 대표 카드 -->
+    <section id="gridSection" class="grid-section hidden">
+      <div class="grid-inner">
+        <!-- 3월 -->
+        <article class="month-card" data-month="3" tabindex="0" aria-labelledby="m3-title">
+          <img src="기말과제/3/3-1.jpg" alt="3월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m3-title">March</h3>
+            <p>첫 현지조사 in 통영</p>
+          </div>
+        </article>
+
+        <!-- 4월 -->
+        <article class="month-card" data-month="4" tabindex="0" aria-labelledby="m4-title">
+          <img src="기말과제/4/4-1.jpg" alt="4월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m4-title">April</h3>
+            <p>문화인류학과 적응기</p>
+          </div>
+        </article>
+
+        <!-- 5월 -->
+        <article class="month-card" data-month="5" tabindex="0" aria-labelledby="m5-title">
+          <img src="기말과제/5/5-1.jpg" alt="5월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m5-title">May</h3>
+            <p>놀고 먹고 놀고 먹기</p>
+          </div>
+        </article>
+
+        <!-- 6월 -->
+        <article class="month-card" data-month="6" tabindex="0" aria-labelledby="m6-title">
+          <img src="기말과제/6/6-1.jpg" alt="6월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m6-title">June</h3>
+            <p>들무새의 민속촌 탐방기</p>
+          </div>
+        </article>
+
+        <!-- 7월 -->
+        <article class="month-card" data-month="7" tabindex="0" aria-labelledby="m7-title">
+          <img src="기말과제/7/7-1.jpg" alt="7월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m7-title">July</h3>
+            <p>뚜쥬루 마을 방문기</p>
+          </div>
+        </article>
+
+        <!-- 8월 -->
+        <article class="month-card" data-month="8" tabindex="0" aria-labelledby="m8-title">
+          <img src="기말과제/8/8-1.png" alt="8월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m8-title">August</h3>
+            <p>생일축하해 민지야</p>
+          </div>
+        </article>
+
+        <!-- 9월 -->
+        <article class="month-card" data-month="9" tabindex="0" aria-labelledby="m9-title">
+          <img src="기말과제/9/9-1.jpg" alt="9월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m9-title">September</h3>
+            <p>제법 익숙해진 한양</p>
+          </div>
+        </article>
+
+        <!-- 10월 -->
+        <article class="month-card" data-month="10" tabindex="0" aria-labelledby="m10-title">
+          <img src="기말과제/10/10-1.jpg" alt="10월 대표사진" class="card-thumb" />
+          <div class="card-meta">
+            <h3 id="m10-title">October</h3>
+            <p>벌써 10월이다</p>
+          </div>
+        </article>
+
+        <!-- 빈칸(3x3 맞추기) -->
+        <div class="grid-spacer"></div>
+      </div>
+    </section>
+
+    <!-- MONTH GALLERIES (초기에는 숨김) -->
+
+    <!-- 3월 (3-1 ~ 3-5) -->
+    <section class="month-gallery hidden" id="gallery-3" data-month="3" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <img src="기말과제/3/3-1.jpg" alt="3-1" />
+          <img src="기말과제/3/3-2.jpg" alt="3-2" />
+          <img src="기말과제/3/3-3.jpg" alt="3-3" />
+          <img src="기말과제/3/3-4.jpg" alt="3-4" />
+          <img src="기말과제/3/3-5.jpg" alt="3-5" />
+        </div>
+      </div>
+
+      <!-- 3월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 3월 유튜브 embed iframe을 붙여넣으세요.
+        예시:
+        <iframe
+          class="video-frame"
+          src="https://www.youtube.com/embed/영상ID"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+        -->
+      </div>
+    </section>
+
+    <!-- 4월 (4-1 ~ 4-9) -->
+    <section class="month-gallery hidden" id="gallery-4" data-month="4" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <img src="기말과제/4/4-1.jpg" alt="4-1" />
+          <img src="기말과제/4/4-2.jpg" alt="4-2" />
+          <img src="기말과제/4/4-3.jpg" alt="4-3" />
+          <img src="기말과제/4/4-4.jpg" alt="4-4" />
+          <img src="기말과제/4/4-5.jpg" alt="4-5" />
+          <img src="기말과제/4/4-6.jpg" alt="4-6" />
+          <img src="기말과제/4/4-7.jpg" alt="4-7" />
+          <img src="기말과제/4/4-8.jpg" alt="4-8" />
+          <img src="기말과제/4/4-9.jpg" alt="4-9" />
+        </div>
+      </div>
+
+      <!-- 4월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 4월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+    <!-- 5월 (5-1 ~ 5-25) -->
+    <section class="month-gallery hidden" id="gallery-5" data-month="5" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <!-- 1~25 -->
+          <img src="기말과제/5/5-1.jpg" alt="5-1" />
+          <img src="기말과제/5/5-2.jpg" alt="5-2" />
+          <img src="기말과제/5/5-3.jpg" alt="5-3" />
+          <img src="기말과제/5/5-4.jpg" alt="5-4" />
+          <img src="기말과제/5/5-5.jpg" alt="5-5" />
+          <img src="기말과제/5/5-6.jpg" alt="5-6" />
+          <img src="기말과제/5/5-7.jpg" alt="5-7" />
+          <img src="기말과제/5/5-8.jpg" alt="5-8" />
+          <img src="기말과제/5/5-9.jpg" alt="5-9" />
+          <img src="기말과제/5/5-10.jpg" alt="5-10" />
+          <img src="기말과제/5/5-11.jpg" alt="5-11" />
+          <img src="기말과제/5/5-12.jpg" alt="5-12" />
+          <img src="기말과제/5/5-13.jpg" alt="5-13" />
+          <img src="기말과제/5/5-14.jpg" alt="5-14" />
+          <img src="기말과제/5/5-15.jpg" alt="5-15" />
+          <img src="기말과제/5/5-16.jpg" alt="5-16" />
+          <img src="기말과제/5/5-17.jpg" alt="5-17" />
+          <img src="기말과제/5/5-18.jpg" alt="5-18" />
+          <img src="기말과제/5/5-19.jpg" alt="5-19" />
+          <img src="기말과제/5/5-20.jpg" alt="5-20" />
+          <img src="기말과제/5/5-21.jpg" alt="5-21" />
+          <img src="기말과제/5/5-22.jpg" alt="5-22" />
+          <img src="기말과제/5/5-23.jpg" alt="5-23" />
+          <img src="기말과제/5/5-24.jpg" alt="5-24" />
+          <img src="기말과제/5/5-25.jpg" alt="5-25" />
+        </div>
+      </div>
+
+      <!-- 5월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 5월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+    <!-- 6월 (6-1 ~ 6-11) -->
+    <section class="month-gallery hidden" id="gallery-6" data-month="6" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <img src="기말과제/6/6-1.jpg" alt="6-1" />
+          <img src="기말과제/6/6-2.jpg" alt="6-2" />
+          <img src="기말과제/6/6-3.jpg" alt="6-3" />
+          <img src="기말과제/6/6-4.jpg" alt="6-4" />
+          <img src="기말과제/6/6-5.jpg" alt="6-5" />
+          <img src="기말과제/6/6-6.jpg" alt="6-6" />
+          <img src="기말과제/6/6-7.jpg" alt="6-7" />
+          <img src="기말과제/6/6-8.jpg" alt="6-8" />
+          <img src="기말과제/6/6-9.jpg" alt="6-9" />
+          <img src="기말과제/6/6-10.jpg" alt="6-10" />
+          <img src="기말과제/6/6-11.jpg" alt="6-11" />
+        </div>
+      </div>
+
+      <!-- 6월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 6월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+    <!-- 7월 (7-1 ~ 7-6) -->
+    <section class="month-gallery hidden" id="gallery-7" data-month="7" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <img src="기말과제/7/7-1.jpg" alt="7-1" />
+          <img src="기말과제/7/7-2.jpg" alt="7-2" />
+          <img src="기말과제/7/7-3.jpg" alt="7-3" />
+          <img src="기말과제/7/7-4.jpg" alt="7-4" />
+          <img src="기말과제/7/7-5.jpg" alt="7-5" />
+          <img src="기말과제/7/7-6.jpg" alt="7-6" />
+        </div>
+      </div>
+
+      <!-- 7월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 7월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+    <!-- 8월 (8-1 ~ 8-10) -->
+    <section class="month-gallery hidden" id="gallery-8" data-month="8" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <img src="기말과제/8/8-1.jpg" alt="8-1" />
+          <img src="기말과제/8/8-2.jpg" alt="8-2" />
+          <img src="기말과제/8/8-3.jpg" alt="8-3" />
+          <img src="기말과제/8/8-4.jpg" alt="8-4" />
+          <img src="기말과제/8/8-5.jpg" alt="8-5" />
+          <img src="기말과제/8/8-6.jpg" alt="8-6" />
+          <img src="기말과제/8/8-7.jpg" alt="8-7" />
+          <img src="기말과제/8/8-8.jpg" alt="8-8" />
+          <img src="기말과제/8/8-9.jpg" alt="8-9" />
+          <img src="기말과제/8/8-10.jpg" alt="8-10" />
+        </div>
+      </div>
+
+      <!-- 8월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 8월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+    <!-- 9월 (9-1 ~ 9-27) -->
+    <section class="month-gallery hidden" id="gallery-9" data-month="9" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <!-- 1~27 -->
+          <img src="기말과제/9/9-1.jpg" alt="9-1" />
+          <img src="기말과제/9/9-2.jpg" alt="9-2" />
+          <img src="기말과제/9/9-3.jpg" alt="9-3" />
+          <img src="기말과제/9/9-4.jpg" alt="9-4" />
+          <img src="기말과제/9/9-5.jpg" alt="9-5" />
+          <img src="기말과제/9/9-6.jpg" alt="9-6" />
+          <img src="기말과제/9/9-7.jpg" alt="9-7" />
+          <img src="기말과제/9/9-8.jpg" alt="9-8" />
+          <img src="기말과제/9/9-9.jpg" alt="9-9" />
+          <img src="기말과제/9/9-10.jpg" alt="9-10" />
+          <img src="기말과제/9/9-11.jpg" alt="9-11" />
+          <img src="기말과제/9/9-12.jpg" alt="9-12" />
+          <img src="기말과제/9/9-13.jpg" alt="9-13" />
+          <img src="기말과제/9/9-14.jpg" alt="9-14" />
+          <img src="기말과제/9/9-15.jpg" alt="9-15" />
+          <img src="기말과제/9/9-16.jpg" alt="9-16" />
+          <img src="기말과제/9/9-17.jpg" alt="9-17" />
+          <img src="기말과제/9/9-18.jpg" alt="9-18" />
+          <img src="기말과제/9/9-19.jpg" alt="9-19" />
+          <img src="기말과제/9/9-20.jpg" alt="9-20" />
+          <img src="기말과제/9/9-21.jpg" alt="9-21" />
+          <img src="기말과제/9/9-22.jpg" alt="9-22" />
+          <img src="기말과제/9/9-23.jpg" alt="9-23" />
+          <img src="기말과제/9/9-24.jpg" alt="9-24" />
+          <img src="기말과제/9/9-25.jpg" alt="9-25" />
+          <img src="기말과제/9/9-26.jpg" alt="9-26" />
+          <img src="기말과제/9/9-27.jpg" alt="9-27" />
+        </div>
+      </div>
+
+      <!-- 9월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 9월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+    <!-- 10월 (10-1 ~ 10-46) -->
+    <section class="month-gallery hidden" id="gallery-10" data-month="10" aria-hidden="true">
+      <button class="close-gallery" aria-label="닫기">✕</button>
+
+      <div class="slider" data-interval="2000">
+        <div class="slides">
+          <!-- 1~46 -->
+          <img src="기말과제/10/10-1.jpg" alt="10-1" />
+          <img src="기말과제/10/10-2.jpg" alt="10-2" />
+          <img src="기말과제/10/10-3.jpg" alt="10-3" />
+          <img src="기말과제/10/10-4.jpg" alt="10-4" />
+          <img src="기말과제/10/10-5.jpg" alt="10-5" />
+          <img src="기말과제/10/10-6.jpg" alt="10-6" />
+          <img src="기말과제/10/10-7.jpg" alt="10-7" />
+          <img src="기말과제/10/10-8.jpg" alt="10-8" />
+          <img src="기말과제/10/10-9.jpg" alt="10-9" />
+          <img src="기말과제/10/10-10.jpg" alt="10-10" />
+          <img src="기말과제/10/10-11.jpg" alt="10-11" />
+          <img src="기말과제/10/10-12.jpg" alt="10-12" />
+          <img src="기말과제/10/10-13.jpg" alt="10-13" />
+          <img src="기말과제/10/10-14.jpg" alt="10-14" />
+          <img src="기말과제/10/10-15.jpg" alt="10-15" />
+          <img src="기말과제/10/10-16.jpg" alt="10-16" />
+          <img src="기말과제/10/10-17.jpg" alt="10-17" />
+          <img src="기말과제/10/10-18.jpg" alt="10-18" />
+          <img src="기말과제/10/10-19.jpg" alt="10-19" />
+          <img src="기말과제/10/10-20.jpg" alt="10-20" />
+          <img src="기말과제/10/10-21.jpg" alt="10-21" />
+          <img src="기말과제/10/10-22.jpg" alt="10-22" />
+          <img src="기말과제/10/10-23.jpg" alt="10-23" />
+          <img src="기말과제/10/10-24.jpg" alt="10-24" />
+          <img src="기말과제/10/10-25.jpg" alt="10-25" />
+          <img src="기말과제/10/10-26.jpg" alt="10-26" />
+          <img src="기말과제/10/10-27.jpg" alt="10-27" />
+          <img src="기말과제/10/10-28.jpg" alt="10-28" />
+          <img src="기말과제/10/10-29.jpg" alt="10-29" />
+          <img src="기말과제/10/10-30.jpg" alt="10-30" />
+          <img src="기말과제/10/10-31.jpg" alt="10-31" />
+          <img src="기말과제/10/10-32.jpg" alt="10-32" />
+          <img src="기말과제/10/10-33.jpg" alt="10-33" />
+          <img src="기말과제/10/10-34.jpg" alt="10-34" />
+          <img src="기말과제/10/10-35.jpg" alt="10-35" />
+          <img src="기말과제/10/10-36.jpg" alt="10-36" />
+          <img src="기말과제/10/10-37.jpg" alt="10-37" />
+          <img src="기말과제/10/10-38.jpg" alt="10-38" />
+          <img src="기말과제/10/10-39.jpg" alt="10-39" />
+          <img src="기말과제/10/10-40.jpg" alt="10-40" />
+          <img src="기말과제/10/10-41.jpg" alt="10-41" />
+          <img src="기말과제/10/10-42.jpg" alt="10-42" />
+          <img src="기말과제/10/10-43.jpg" alt="10-43" />
+          <img src="기말과제/10/10-44.jpg" alt="10-44" />
+          <img src="기말과제/10/10-45.jpg" alt="10-45" />
+          <img src="기말과제/10/10-46.jpg" alt="10-46" />
+        </div>
+      </div>
+
+      <!-- 10월 LP + 유튜브 영상 영역 -->
+      <div class="video-lp">
+        <!-- 이 안에 10월 유튜브 embed iframe을 붙여넣으세요. -->
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
