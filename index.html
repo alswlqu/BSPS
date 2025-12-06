@@ -5,11 +5,168 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>복세편살</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- 폰트는 필요하면 추가하세요 -->
+  
+  <style>
+    /* =========================================
+       [수정됨] 헤더 스타일
+       - 처음엔 배경 투명(transparent)
+       - .scrolled 클래스가 붙으면 흰색(#fff)
+       - .hidden 클래스가 있으면 아예 안 보임
+    ========================================= */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 15px 0;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 부드러운 전환 */
+      background-color: transparent; /* 기본은 투명 */
+    }
+
+    /* 스크롤을 내렸을 때 적용될 스타일 (흰색 배경 + 그림자) */
+    .site-header.scrolled {
+      background-color: #ffffff; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* 헤더가 숨겨져야 할 때 (처음 커버 화면) */
+    .site-header.hidden {
+      display: none;
+    }
+
+    .header-inner {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .hamburger {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ----------------------------------------- */
+
+    /* 갤러리 컨테이너 */
+    .scroll-gallery-container {
+      width: 90%;
+      max-width: 1200px;
+      height: 80vh; 
+      margin: 80px auto 0; /* 헤더 높이만큼 여백 확보 */
+      overflow-y: auto; 
+      padding-right: 10px; 
+    }
+
+    /* 바둑판(그리드) 배열 */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+      gap: 15px; 
+      padding-bottom: 50px;
+      justify-content: center; 
+    }
+
+    /* 이미지 스타일 (1:1 정사각형) */
+    .gallery-grid img {
+      width: 100%;
+      aspect-ratio: 1 / 1; 
+      object-fit: cover; 
+      background-color: rgba(0,0,0,0.2); 
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+      cursor: pointer; 
+    }
+    
+    .gallery-grid img:hover {
+      transform: scale(1.02); 
+      z-index: 10;
+    }
+
+    /* 스크롤바 디자인 */
+    .scroll-gallery-container::-webkit-scrollbar { width: 8px; }
+    .scroll-gallery-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
+    .scroll-gallery-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+
+    /* 라이트박스(원본 보기 + 설명창) 스타일 */
+    #lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9); 
+      display: none; 
+      justify-content: center; align-items: center; flex-direction: column;
+      z-index: 2000;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    #lightbox.active { display: flex; opacity: 1; }
+    #lightbox img {
+      max-width: 90%; max-height: 75vh;
+      object-fit: contain; 
+      border-radius: 4px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    #lightbox-caption {
+      margin-top: 20px;
+      color: #fff;
+      font-size: 1.1rem;
+      text-align: center;
+      font-weight: 300;
+      max-width: 80%;
+      line-height: 1.6;
+      background: rgba(0,0,0,0.5);
+      padding: 10px 20px;
+      border-radius: 20px;
+    }
+    
+    /* 닫기 버튼 (오른쪽 위 X) */
+    #lightbox-close {
+      position: absolute; top: 20px; right: 30px;
+      color: #fff; font-size: 40px;
+      cursor: pointer; background: none; border: none;
+    }
+
+    /* 뒤로가기 버튼 (왼쪽 위 화살표) */
+    #lightbox-back {
+      position: absolute; top: 20px; left: 30px;
+      color: #fff; font-size: 40px;
+      cursor: pointer; background: none; border: none;
+    }
+
+    /* 기본적으로 숨김 클래스 */
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="site-header">
+  <header class="site-header hidden" id="siteHeader">
     <div class="header-inner">
       <div class="logo" id="logoBtn">복세편살</div>
       <nav class="main-nav" aria-label="Main">
@@ -21,7 +178,6 @@
     </div>
   </header>
 
-  <!-- COVER / START SCREEN -->
   <main id="main">
     <section id="cover" class="cover">
       <div class="cover-inner">
@@ -31,94 +187,24 @@
       </div>
     </section>
 
-    <!-- GRID SECTION: 3x3 대표 카드 -->
     <section id="gridSection" class="grid-section hidden">
       <div class="grid-inner">
-        <!-- 3월 -->
-        <article class="month-card" data-month="3" tabindex="0" aria-labelledby="m3-title">
-          <img src="기말과제/3/3-1.jpg" alt="3월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m3-title">3月</h3>
-            <p>첫 현지조사 in 통영</p>
-          </div>
-        </article>
-
-        <!-- 4월 -->
-        <article class="month-card" data-month="4" tabindex="0" aria-labelledby="m4-title">
-          <img src="기말과제/4/4-1.jpg" alt="4월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m4-title">4月</h3>
-            <p>문화인류학과 적응기</p>
-          </div>
-        </article>
-
-        <!-- 5월 -->
-        <article class="month-card" data-month="5" tabindex="0" aria-labelledby="m5-title">
-          <img src="기말과제/5/5-1.jpg" alt="5월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m5-title">5月</h3>
-            <p>내가 제일 잘 하는 것 : 놀고 먹기</p>
-          </div>
-        </article>
-
-        <!-- 6월 -->
-        <article class="month-card" data-month="6" tabindex="0" aria-labelledby="m6-title">
-          <img src="기말과제/6/6-1.jpg" alt="6월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m6-title">6月</h3>
-            <p>들무새의 민속촌 탐방기</p>
-          </div>
-        </article>
-
-        <!-- 7월 -->
-        <article class="month-card" data-month="7" tabindex="0" aria-labelledby="m7-title">
-          <img src="기말과제/7/7-1.jpg" alt="7월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m7-title">7月</h3>
-            <p>뚜레쥬르 알바생의 뚜쥬루 마을 방문기</p>
-          </div>
-        </article>
-
-        <!-- 8월 -->
-        <article class="month-card" data-month="8" tabindex="0" aria-labelledby="m8-title">
-          <img src="기말과제/8/8-1.png" alt="8월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m8-title">8月</h3>
-            <p>생일축하해 민지야</p>
-          </div>
-        </article>
-
-        <!-- 9월 -->
-        <article class="month-card" data-month="9" tabindex="0" aria-labelledby="m9-title">
-          <img src="기말과제/9/9-1.jpg" alt="9월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m9-title">9月</h3>
-            <p>제법 익숙해진 한양</p>
-          </div>
-        </article>
-
-        <!-- 10월 -->
-        <article class="month-card" data-month="10" tabindex="0" aria-labelledby="m10-title">
-          <img src="기말과제/10/10-1.jpg" alt="10월 대표사진" class="card-thumb" />
-          <div class="card-meta">
-            <h3 id="m10-title">10月</h3>
-            <p>벌써 10월이다</p>
-          </div>
-        </article>
-
-        <!-- 빈칸(3x3 맞추기) -->
+        <article class="month-card" data-month="3" tabindex="0"><img src="기말과제/3/3-1.jpg" alt="3월" class="card-thumb" /><div class="card-meta"><h3>3月</h3><p>첫 현지조사 in 통영</p></div></article>
+        <article class="month-card" data-month="4" tabindex="0"><img src="기말과제/4/4-1.jpg" alt="4월" class="card-thumb" /><div class="card-meta"><h3>4月</h3><p>문화인류학과 적응기</p></div></article>
+        <article class="month-card" data-month="5" tabindex="0"><img src="기말과제/5/5-1.jpg" alt="5월" class="card-thumb" /><div class="card-meta"><h3>5月</h3><p>내가 제일 잘 하는 것 : 놀고 먹기</p></div></article>
+        <article class="month-card" data-month="6" tabindex="0"><img src="기말과제/6/6-1.jpg" alt="6월" class="card-thumb" /><div class="card-meta"><h3>6月</h3><p>들무새의 민속촌 탐방기</p></div></article>
+        <article class="month-card" data-month="7" tabindex="0"><img src="기말과제/7/7-1.jpg" alt="7월" class="card-thumb" /><div class="card-meta"><h3>7月</h3><p>뚜레쥬르 알바생의 뚜쥬루 마을 방문기</p></div></article>
+        <article class="month-card" data-month="8" tabindex="0"><img src="기말과제/8/8-1.png" alt="8월" class="card-thumb" /><div class="card-meta"><h3>8月</h3><p>생일축하해 민지야</p></div></article>
+        <article class="month-card" data-month="9" tabindex="0"><img src="기말과제/9/9-1.jpg" alt="9월" class="card-thumb" /><div class="card-meta"><h3>9月</h3><p>제법 익숙해진 한양</p></div></article>
+        <article class="month-card" data-month="10" tabindex="0"><img src="기말과제/10/10-1.jpg" alt="10월" class="card-thumb" /><div class="card-meta"><h3>10月</h3><p>벌써 10월이다</p></div></article>
         <div class="grid-spacer"></div>
       </div>
     </section>
 
-    <!-- MONTH GALLERIES (초기에는 숨김) -->
-
-    <!-- 3월 (3-1 ~ 3-5) -->
-    <section class="month-gallery hidden" id="gallery-3" data-month="3" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
+    <section class="month-gallery hidden" id="gallery-3" data-month="3">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/3/3-1.jpg" alt="3-1" />
           <img src="기말과제/3/3-2.jpg" alt="3-2" />
           <img src="기말과제/3/3-3.jpg" alt="3-3" />
@@ -126,34 +212,15 @@
           <img src="기말과제/3/3-5.jpg" alt="3-5" />
         </div>
       </div>
-
-      <!-- 3월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 3월 유튜브 embed iframe을 붙여넣으세요.
-        예시:
-        <iframe
-          class="video-frame"
-          src="https://www.youtube.com/embed/영상ID"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen>
-        </iframe>
-        -->
-      </div>
     </section>
 
-    <!-- 4월 (4-1 ~ 4-9) -->
-    <section class="month-gallery hidden" id="gallery-4" data-month="4" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
+    <section class="month-gallery hidden" id="gallery-4" data-month="4">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/4/4-1.jpg" alt="4-1" />
           <img src="기말과제/4/4-2.jpg" alt="4-2" />
           <img src="기말과제/4/4-3.jpg" alt="4-3" />
-          <img src="기말과제/4/4-4.jpg" alt="4-4" />
           <img src="기말과제/4/4-5.jpg" alt="4-5" />
           <img src="기말과제/4/4-6.jpg" alt="4-6" />
           <img src="기말과제/4/4-7.jpg" alt="4-7" />
@@ -161,27 +228,19 @@
           <img src="기말과제/4/4-9.jpg" alt="4-9" />
         </div>
       </div>
-
-      <!-- 4월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 4월 유튜브 embed iframe을 붙여넣으세요. -->
-      </div>
     </section>
 
-    <!-- 5월 (5-1 ~ 5-25) -->
-    <section class="month-gallery hidden" id="gallery-5" data-month="5" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
-          <!-- 1~25 -->
+    <section class="month-gallery hidden" id="gallery-5" data-month="5">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/5/5-1.jpg" alt="5-1" />
           <img src="기말과제/5/5-2.jpg" alt="5-2" />
           <img src="기말과제/5/5-3.jpg" alt="5-3" />
           <img src="기말과제/5/5-4.jpg" alt="5-4" />
           <img src="기말과제/5/5-5.jpg" alt="5-5" />
           <img src="기말과제/5/5-6.jpg" alt="5-6" />
-          <img src="기말과제/5/5-7.jpg" alt="5-7" />
+          <img src="기말과제/5/5-7.png" alt="5-7" />
           <img src="기말과제/5/5-8.jpg" alt="5-8" />
           <img src="기말과제/5/5-9.jpg" alt="5-9" />
           <img src="기말과제/5/5-10.jpg" alt="5-10" />
@@ -196,25 +255,18 @@
           <img src="기말과제/5/5-19.jpg" alt="5-19" />
           <img src="기말과제/5/5-20.jpg" alt="5-20" />
           <img src="기말과제/5/5-21.jpg" alt="5-21" />
-          <img src="기말과제/5/5-22.jpg" alt="5-22" />
-          <img src="기말과제/5/5-23.jpg" alt="5-23" />
+          <img src="기말과제/5/5-22.png" alt="5-22" />
+          <img src="기말과제/5/5-23.png" alt="5-23" />
           <img src="기말과제/5/5-24.jpg" alt="5-24" />
           <img src="기말과제/5/5-25.jpg" alt="5-25" />
         </div>
       </div>
-
-      <!-- 5월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 5월 유튜브 embed iframe을 붙여넣으세요. -->
-      </div>
     </section>
 
-    <!-- 6월 (6-1 ~ 6-11) -->
-    <section class="month-gallery hidden" id="gallery-6" data-month="6" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
+    <section class="month-gallery hidden" id="gallery-6" data-month="6">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/6/6-1.jpg" alt="6-1" />
           <img src="기말과제/6/6-2.jpg" alt="6-2" />
           <img src="기말과제/6/6-3.jpg" alt="6-3" />
@@ -225,22 +277,14 @@
           <img src="기말과제/6/6-8.jpg" alt="6-8" />
           <img src="기말과제/6/6-9.jpg" alt="6-9" />
           <img src="기말과제/6/6-10.jpg" alt="6-10" />
-          <img src="기말과제/6/6-11.jpg" alt="6-11" />
         </div>
-      </div>
-
-      <!-- 6월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 6월 유튜브 embed iframe을 붙여넣으세요. -->
       </div>
     </section>
 
-    <!-- 7월 (7-1 ~ 7-6) -->
-    <section class="month-gallery hidden" id="gallery-7" data-month="7" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
+    <section class="month-gallery hidden" id="gallery-7" data-month="7">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/7/7-1.jpg" alt="7-1" />
           <img src="기말과제/7/7-2.jpg" alt="7-2" />
           <img src="기말과제/7/7-3.jpg" alt="7-3" />
@@ -249,20 +293,13 @@
           <img src="기말과제/7/7-6.jpg" alt="7-6" />
         </div>
       </div>
-
-      <!-- 7월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 7월 유튜브 embed iframe을 붙여넣으세요. -->
-      </div>
     </section>
 
-    <!-- 8월 (8-1 ~ 8-10) -->
-    <section class="month-gallery hidden" id="gallery-8" data-month="8" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
-          <img src="기말과제/8/8-1.jpg" alt="8-1" />
+    <section class="month-gallery hidden" id="gallery-8" data-month="8">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
+          <img src="기말과제/8/8-1.png" alt="8-1" />
           <img src="기말과제/8/8-2.jpg" alt="8-2" />
           <img src="기말과제/8/8-3.jpg" alt="8-3" />
           <img src="기말과제/8/8-4.jpg" alt="8-4" />
@@ -271,23 +308,14 @@
           <img src="기말과제/8/8-7.jpg" alt="8-7" />
           <img src="기말과제/8/8-8.jpg" alt="8-8" />
           <img src="기말과제/8/8-9.jpg" alt="8-9" />
-          <img src="기말과제/8/8-10.jpg" alt="8-10" />
         </div>
-      </div>
-
-      <!-- 8월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 8월 유튜브 embed iframe을 붙여넣으세요. -->
       </div>
     </section>
 
-    <!-- 9월 (9-1 ~ 9-27) -->
-    <section class="month-gallery hidden" id="gallery-9" data-month="9" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
-          <!-- 1~27 -->
+    <section class="month-gallery hidden" id="gallery-9" data-month="9">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/9/9-1.jpg" alt="9-1" />
           <img src="기말과제/9/9-2.jpg" alt="9-2" />
           <img src="기말과제/9/9-3.jpg" alt="9-3" />
@@ -301,11 +329,11 @@
           <img src="기말과제/9/9-11.jpg" alt="9-11" />
           <img src="기말과제/9/9-12.jpg" alt="9-12" />
           <img src="기말과제/9/9-13.jpg" alt="9-13" />
-          <img src="기말과제/9/9-15.jpg" alt="9-14" />
-          <img src="기말과제/9/9-16.jpg" alt="9-15" />
+          <img src="기말과제/9/9-14.jpg" alt="9-14" />
+          <img src="기말과제/9/9-15.jpg" alt="9-15" />
           <img src="기말과제/9/9-17.jpg" alt="9-17" />
           <img src="기말과제/9/9-18.jpg" alt="9-18" />
-          <img src="기말과제/9/9-19.jpg" alt="9-19" />
+          <img src="기말과제/9/9-19.png" alt="9-19" />
           <img src="기말과제/9/9-20.jpg" alt="9-20" />
           <img src="기말과제/9/9-21.jpg" alt="9-21" />
           <img src="기말과제/9/9-22.jpg" alt="9-22" />
@@ -316,20 +344,12 @@
           <img src="기말과제/9/9-27.jpg" alt="9-27" />
         </div>
       </div>
-
-      <!-- 9월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 9월 유튜브 embed iframe을 붙여넣으세요. -->
-      </div>
     </section>
 
-    <!-- 10월 (10-1 ~ 10-46) -->
-    <section class="month-gallery hidden" id="gallery-10" data-month="10" aria-hidden="true">
-      <button class="close-gallery" aria-label="닫기">✕</button>
-
-      <div class="slider" data-interval="2000">
-        <div class="slides">
-          <!-- 1~46 -->
+    <section class="month-gallery hidden" id="gallery-10" data-month="10">
+      <button class="close-gallery">✕</button>
+      <div class="scroll-gallery-container">
+        <div class="gallery-grid">
           <img src="기말과제/10/10-1.jpg" alt="10-1" />
           <img src="기말과제/10/10-2.jpg" alt="10-2" />
           <img src="기말과제/10/10-3.jpg" alt="10-3" />
@@ -358,7 +378,7 @@
           <img src="기말과제/10/10-26.jpg" alt="10-26" />
           <img src="기말과제/10/10-27.jpg" alt="10-27" />
           <img src="기말과제/10/10-28.jpg" alt="10-28" />
-          <img src="기말과제/10/10-29.jpg" alt="10-29" />
+          <img src="기말과제/10/10-29.png" alt="10-29" />
           <img src="기말과제/10/10-30.jpg" alt="10-30" />
           <img src="기말과제/10/10-31.jpg" alt="10-31" />
           <img src="기말과제/10/10-32.jpg" alt="10-32" />
@@ -371,22 +391,280 @@
           <img src="기말과제/10/10-39.jpg" alt="10-39" />
           <img src="기말과제/10/10-40.jpg" alt="10-40" />
           <img src="기말과제/10/10-41.jpg" alt="10-41" />
-          <img src="기말과제/10/10-42.jpg" alt="10-42" />
-          <img src="기말과제/10/10-43.jpg" alt="10-43" />
-          <img src="기말과제/10/10-44.jpg" alt="10-44" />
-          <img src="기말과제/10/10-45.jpg" alt="10-45" />
-          <img src="기말과제/10/10-46.jpg" alt="10-46" />
         </div>
-      </div>
-
-      <!-- 10월 LP + 유튜브 영상 영역 -->
-      <div class="video-lp">
-        <!-- 이 안에 10월 유튜브 embed iframe을 붙여넣으세요. -->
       </div>
     </section>
 
   </main>
 
-  <script src="script.js" defer></script>
+  <div id="lightbox">
+    <button id="lightbox-back">←</button> <button id="lightbox-close">✕</button> <img id="lightbox-img" src="" alt="확대 이미지" />
+    <p id="lightbox-caption"></p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      /* 요청하신 설명 데이터 전체 */
+      const imageDescriptions = {
+        // === 3월 ===
+        "3-1": "동기들과 카페에 갔는데 너무나도 눈에 띄는 포스트잇을 발견했다.",
+        "3-2": "첫 현지조사와 문화유산반 단체 식사",
+        "3-3": "현지조사 총평 끝나고 경철쌤과 건이와 한컷 ^^*",
+        "3-4": "현지조사 2일차, 광란의 밤 with 문인25",
+        "3-5": "삼도수군통제영에서 (3박 4일 중 제일 재밌었음)",
+
+        // === 4월 ===
+        "4-1": "찬란 회식!!",
+        "4-2": "청춘~ 찬란!",
+        "4-3": "찬란의 문인들 ㅎㅎ (만취한 성빈이)",
+        "4-5": "헤헤",
+        "4-6": "알바 유니폼 받았다!",
+        "4-7": "찐 문인이 된 느낌",
+        "4-8": "귀엽다 문인들",
+        "4-9": "송쌤과 함께 ㅎㅎㅎ",
+
+        // === 5월 ===
+        "5-1": "25학번 MT 끝나고 다같이!",
+        "5-2": "고양이를 귀여워하는 애들을 귀여워하는 나",
+        "5-3": "집 오는 지하철에서ㅎㅎ",
+        "5-4": "기획국!!!!",
+        "5-5": "대부도 가서 김치전 먹음",
+        "5-6": "대부도 가서 칼국수 먹음",
+        "5-7": "오랜만에 애들이랑 ㅎㅎ",
+        "5-8": "너무너무 재밌었다",
+        "5-9": "7.77초 맞추기 (8명 중에 아무도 못 함)",
+        "5-10": "술 사주는 친구",
+        "5-11": "재밌었다~~",
+        "5-12": "찬란 LT 주루마블....",
+        "5-13": "광기 어린 레크레이션 시간",
+        "5-14": "찬란 미녀들",
+        "5-15": "난.장.판.",
+        "5-16": "유경언니가 그려주신 기획국 ㅎㅎ",
+        "5-17": "맥박~ 문인!",
+        "5-18": "유치~ 찬란!",
+        "5-19": "옷이 너무 귀여워서ㅎㅎ",
+        "5-20": "유민이랑💖",
+        "5-21": "작품명 <22일 8시>",
+        "5-22": "교양 팀플인데, 팀 잘 만난 것 같다요~",
+        "5-23": "모임이름 : 크될사 (크게 될 사람들)",
+        "5-24": "유진이랑😍💞",
+        "5-25": "쩐유진 ><",
+        
+        // === 6월 ===
+        "6-1": "들무새와 민속촌 나들이",
+        "6-2": "들무새와 민속촌 나들이2",
+        "6-3": "들무새와 민속촌 나들이3",
+        "6-4": "너무 좋다, 믓찌다!!",
+        "6-5": "귀요미들",
+        "6-6": "들무새 알라부",
+        "6-7": "넘 귀엽고",
+        "6-8": "넘 멋지고",
+        "6-9": "공연 잘 마무리 하자!",
+        "6-10": "인초 마지막 수업 ㅠ",
+
+        // === 7월 ===
+        "7-1": "민경이랑 심야데이뚜",
+        "7-2": "오랜만에 만난 309",
+        "7-3": "뚜레쥬르 알바생의 뚜쥬르 마을 방문기",
+        "7-4": "비와서 아쉬웠음 ㅠ",
+        "7-5": "명란소금빵 뚜레쥬르에서도 팔아줘!!",
+        "7-6": "이게 진짜 개맛있음.",
+
+        // === 8월 ===
+        "8-1": "윤희쓰, 나영쓰랑😍",
+        "8-2": "오랜만에 서울랜드 갔듬!",
+        "8-3": "귀욥",
+        "8-4": "놀이공원 필수코스 = 회전목마 앞에서 사진찍기",
+        "8-5": "레전드 구조조정",
+        "8-6": "새로 나온 빵인데 넘 귀여움 but 맛은 잘...",
+        "8-7": "민경이랑 일산 나들이",
+        "8-8": "뀨",
+        "8-9": "생일 꽃 받았따",
+        
+        // === 9월 ===
+        "9-1": "건, 유진과 세븐틴하츠페스티벌",
+        "9-2": "귀욥징",
+        "9-3": "너무 마음에 든다 ㅎㅎ",
+        "9-4": "교반 짝사랑녀",
+        "9-5": "교반무새",
+        "9-6": "이렇게 먹고도 안 취함!",
+        "9-7": "한강 처음 가봄😁👍",
+        "9-8": "한강 + 치맥 = ❤️",
+        "9-9": "날씨 너~~무 좋고",
+        "9-10": "아빈쓰와💕",
+        "9-11": "날이 너무 좋아서,",
+        "9-12": "거리도 예쁘고,",
+        "9-13": "모든게 완벽하다.",
+        "9-14": "야고 너무 재밌구요~ // 개뿌듯함",
+        "9-15": "김희재와 함께하는 현지조사",
+        "9-17": "재밌게 다녀오겠습니다~",
+        "9-18": "고창 도착",
+        "9-19": "전통 의복 체험",
+        "9-20": "읍성 너무 멋있따...",
+        "9-21": "의복 체험 함께 해줘서 고마워요",
+        "9-22": "떵쏘편 ('떵빈이가 쏘는 편의점'이란 뜻)",
+        "9-23": "넘 조타",
+        "9-24": "내가 사랑하는 나의 동기들 ^^*",
+        "9-25": "문화반 단체사진",
+        "9-26": "찬란 귀요미 부원들 회식~",
+        "9-27": "개취함",
+        
+        // === 10월 ===
+        "10-1": "문과인의 밤 준비과정",
+        "10-2": "주점팀 수고하셨습니다~",
+        "10-3": "이거 개맛있었음 / 집에서 해먹을 정도",
+        "10-4": "문과인의 밤 끝~!!",
+        "10-5": "쭈영이랑💙",
+        "10-6": "박상준, 박성은, 박은찬, 권민지, 권민경",
+        "10-7": "최후의 만찬",
+        "10-8": "민경이랑",
+        "10-9": "쌍도 행님들 끝장냈다^^ (사실 내가 끝장남)",
+        "10-10": "찡긋",
+        "10-11": "민경아 꼭 에리카 와라.",
+        "10-12": "시험기간 밤샘",
+        "10-13": "넘 귀엽다",
+        "10-14": "넘 귀엽다2",
+        "10-15": "술 안 좋아하는 애들이랑 ㅎㅎ",
+        "10-16": "재밌네 ㅎㅎ",
+        "10-17": "짧고 굴게 잘 놀았따",
+        "10-18": ">.<",
+        "10-19": "건아 징이랑 잘 어울린다",
+        "10-20": "무새들",
+        "10-21": "건한영과",
+        "10-22": "꽃보다 남자...?들",
+        "10-23": "생각보다 재밌었다. 막 그렇게 안 무서움",
+        "10-24": "오랜만에 뚜빈, 정히랑💗",
+        "10-25": "김치볶음밥 맛있었듬",
+        "10-26": "이거 소스가 진짜 개맛도리",
+        "10-27": "전유진이 닮았다고 보여줌 ㅡㅡ",
+        "10-28": "전유진 조아~",
+        "10-29": "교반 짝사랑녀",
+        "10-30": "갑분 동탄",
+        "10-31": "근데 예쁨",
+        "10-32": "동탄드라이브팟",
+        "10-33": "떵빈쓰",
+        "10-34": "떵빈쓰22",
+        "10-35": "에리카에 온 걸 환영해 얘들아",
+        "10-36": "키힣",
+        "10-37": "놀랍게도 술 한 모금도 안 먹음.",
+        "10-38": "내가 제일 사랑하는 치킨😍",
+        "10-39": "기획 체고 ㅎㅎㅎ",
+        "10-40": "준성쓰, 성빈쓰",
+        "10-41": "찬유야 잘 다녀와 ㅋ"
+      };
+
+      // 1. 커버(달력) <-> 그리드 전환
+      const startBtn = document.getElementById('startBtn');
+      const gridSection = document.getElementById('gridSection');
+      const cover = document.getElementById('cover');
+      const logoBtn = document.getElementById('logoBtn');
+      
+      // [수정] 헤더 요소 가져오기
+      const siteHeader = document.getElementById('siteHeader');
+
+      if(startBtn) {
+        startBtn.addEventListener('click', () => {
+          cover.classList.add('hidden');
+          gridSection.classList.remove('hidden');
+          // [수정] 시작 버튼 누르면 헤더 보이기
+          siteHeader.classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+      if(logoBtn) {
+        logoBtn.addEventListener('click', () => {
+          // 모든 갤러리 닫고 초기화면으로
+          document.querySelectorAll('.month-gallery').forEach(g => g.classList.add('hidden'));
+          cover.classList.remove('hidden');
+          gridSection.classList.add('hidden');
+          
+          // [수정] 처음 화면으로 가면 헤더 다시 숨기기
+          siteHeader.classList.add('hidden');
+          
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      // 2. 월 선택 시 해당 갤러리 오픈
+      const monthCards = document.querySelectorAll('.month-card');
+      monthCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const month = card.getAttribute('data-month');
+          const targetGallery = document.getElementById(`gallery-${month}`);
+          if(targetGallery) {
+            gridSection.classList.add('hidden');
+            targetGallery.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        });
+      });
+
+      // 3. 갤러리 닫기 버튼
+      const closeButtons = document.querySelectorAll('.close-gallery');
+      closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.closest('.month-gallery').classList.add('hidden');
+          gridSection.classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+
+      // 4. 스크롤 시 헤더 배경색 변경
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+          siteHeader.classList.add('scrolled');
+        } else {
+          siteHeader.classList.remove('scrolled');
+        }
+      });
+
+      // ----------------------------------------------------
+      // 5. 라이트박스 로직 (데이터 연결 + 뒤로가기)
+      // ----------------------------------------------------
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+      const lightboxClose = document.getElementById('lightbox-close');
+      const lightboxBack = document.getElementById('lightbox-back');
+      
+      const galleryImages = document.querySelectorAll('.gallery-grid img');
+
+      galleryImages.forEach(img => {
+        img.addEventListener('click', () => {
+          const src = img.getAttribute('src');
+          const altKey = img.getAttribute('alt');
+          const captionText = imageDescriptions[altKey] || "";
+
+          lightboxImg.src = src;
+          lightboxCaption.textContent = captionText;
+          lightbox.classList.add('active');
+        });
+      });
+
+      // 라이트박스 닫기 기능
+      const closeLightbox = () => {
+        lightbox.classList.remove('active');
+        setTimeout(() => {
+          lightboxImg.src = "";
+          lightboxCaption.textContent = "";
+        }, 300);
+      }
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightboxBack.addEventListener('click', closeLightbox); // 뒤로가기 버튼도 닫기
+      
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
