@@ -8,10 +8,7 @@
   
   <style>
     /* =========================================
-       [수정됨] 헤더 스타일
-       - 처음엔 배경 투명(transparent)
-       - .scrolled 클래스가 붙으면 흰색(#fff)
-       - .hidden 클래스가 있으면 아예 안 보임
+       [기존 스타일 유지] 헤더 스타일
     ========================================= */
     .site-header {
       position: fixed;
@@ -20,17 +17,15 @@
       width: 100%;
       z-index: 1000;
       padding: 15px 0;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 부드러운 전환 */
-      background-color: transparent; /* 기본은 투명 */
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: transparent;
     }
 
-    /* 스크롤을 내렸을 때 적용될 스타일 (흰색 배경 + 그림자) */
     .site-header.scrolled {
       background-color: #ffffff; 
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* 헤더가 숨겨져야 할 때 (처음 커버 화면) */
     .site-header.hidden {
       display: none;
     }
@@ -62,6 +57,7 @@
       color: #333;
       font-weight: 500;
       font-size: 0.95rem;
+      cursor: pointer;
     }
 
     .hamburger {
@@ -71,19 +67,76 @@
       cursor: pointer;
     }
 
-    /* ----------------------------------------- */
+    /* =========================================
+       PLAYLIST 드롭다운 스타일
+    ========================================= */
+    .nav-dropdown-container {
+      position: relative;
+    }
 
-    /* 갤러리 컨테이너 */
+    .playlist-menu {
+      position: absolute;
+      top: 140%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      padding: 10px 0;
+      list-style: none;
+      display: none;
+      flex-direction: column;
+      z-index: 2000;
+      border: 1px solid #eee;
+    }
+
+    .playlist-menu.active {
+      display: flex;
+    }
+
+    .playlist-menu::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid #fff;
+    }
+
+    .playlist-menu li {
+      width: 100%;
+    }
+
+    .playlist-menu li a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+
+    .playlist-menu li a:hover {
+      background-color: #f7f7f7;
+      color: #000;
+      font-weight: 500;
+    }
+
+    /* ----------------------------------------- */
+    /* 갤러리 및 라이트박스 스타일 */
+
     .scroll-gallery-container {
       width: 90%;
       max-width: 1200px;
       height: 80vh; 
-      margin: 80px auto 0; /* 헤더 높이만큼 여백 확보 */
+      margin: 80px auto 0;
       overflow-y: auto; 
       padding-right: 10px; 
     }
 
-    /* 바둑판(그리드) 배열 */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
@@ -92,7 +145,6 @@
       justify-content: center; 
     }
 
-    /* 이미지 스타일 (1:1 정사각형) */
     .gallery-grid img {
       width: 100%;
       aspect-ratio: 1 / 1; 
@@ -109,57 +161,65 @@
       z-index: 10;
     }
 
-    /* 스크롤바 디자인 */
     .scroll-gallery-container::-webkit-scrollbar { width: 8px; }
     .scroll-gallery-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
     .scroll-gallery-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
 
-    /* 라이트박스(원본 보기 + 설명창) 스타일 */
+    /* 라이트박스 (전체 화면 보기) 스타일 */
     #lightbox {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9); 
+      background: rgba(0, 0, 0, 0.95); /* 배경 더 어둡게 */
       display: none; 
       justify-content: center; align-items: center; flex-direction: column;
-      z-index: 2000;
+      z-index: 9999; /* 제일 위에 뜨도록 */
       opacity: 0; transition: opacity 0.3s ease;
     }
     #lightbox.active { display: flex; opacity: 1; }
+    
     #lightbox img {
-      max-width: 90%; max-height: 75vh;
+      max-width: 90%; max-height: 70vh;
       object-fit: contain; 
       border-radius: 4px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
+
     #lightbox-caption {
       margin-top: 20px;
       color: #fff;
       font-size: 1.1rem;
       text-align: center;
-      font-weight: 300;
+      font-weight: 400;
       max-width: 80%;
       line-height: 1.6;
-      background: rgba(0,0,0,0.5);
-      padding: 10px 20px;
-      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      padding: 15px 30px;
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
     }
     
     /* 닫기 버튼 (오른쪽 위 X) */
     #lightbox-close {
-      position: absolute; top: 20px; right: 30px;
-      color: #fff; font-size: 40px;
+      position: absolute; top: 30px; right: 30px;
+      color: #fff; font-size: 30px;
       cursor: pointer; background: none; border: none;
+      z-index: 10000;
     }
 
     /* 뒤로가기 버튼 (왼쪽 위 화살표) */
     #lightbox-back {
-      position: absolute; top: 20px; left: 30px;
-      color: #fff; font-size: 40px;
+      position: absolute; top: 30px; left: 30px;
+      color: #fff; font-size: 30px;
       cursor: pointer; background: none; border: none;
+      z-index: 10000;
+    }
+    
+    #lightbox-back:hover, #lightbox-close:hover {
+        transform: scale(1.1);
+        color: #ddd;
     }
 
-    /* 기본적으로 숨김 클래스 */
     .hidden {
       display: none !important;
     }
@@ -170,9 +230,24 @@
     <div class="header-inner">
       <div class="logo" id="logoBtn">복세편살</div>
       <nav class="main-nav" aria-label="Main">
-        <a href="#" class="nav-item">PROJECTS</a>
-        <a href="#" class="nav-item">STUDIO</a>
-        <a href="#" class="nav-item">CONTACT</a>
+        
+        <div class="nav-dropdown-container">
+          <a href="#" class="nav-item" id="playlistBtn">PLAYLIST</a>
+          <ul class="playlist-menu" id="playlistMenu">
+            <li><a href="https://www.youtube.com/watch?v=7SrO5NBF-js" target="_blank">찬란</a></li>
+            <li><a href="https://www.youtube.com/watch?v=ECgWPp8hvOs" target="_blank">serenade</a></li>
+            <li><a href="https://www.youtube.com/watch?v=sB6UGX2YPjQ" target="_blank">이 지금(Dlwlrma)</a></li>
+            <li><a href="https://www.youtube.com/watch?v=OrwY2gZM5QI" target="_blank">외딴섬 로맨틱</a></li>
+            <li><a href="https://www.youtube.com/watch?v=1XQ0Bkx34Rs" target="_blank">여름비</a></li>
+            <li><a href="https://www.youtube.com/watch?v=Bq2K9CqpRKg" target="_blank">사랑의이름으로!</a></li>
+            <li><a href="https://www.youtube.com/watch?v=-_r_Y5nuHlo" target="_blank">한시 오분(1:05)</a></li>
+            <li><a href="https://www.youtube.com/watch?v=eKtSbXHaqLM" target="_blank">사랑하게 될 거야</a></li>
+            <li><a href="https://www.youtube.com/watch?v=5U-JroWwFkw" target="_blank">Lost stars</a></li>
+            <li><a href="https://www.youtube.com/watch?v=jKT4ArZCkso" target="_blank">Champion</a></li>
+            <li><a href="https://www.youtube.com/watch?v=J7klzJ9auE0" target="_blank">뜨거운 여름밤은 가고 남은 건 볼품없지만</a></li>
+            <li><a href="https://www.youtube.com/watch?v=BJB7LXwF0MU" target="_blank">애타는 마음</a></li>
+          </ul>
+        </div>
         <button class="hamburger" aria-label="menu">☰</button>
       </nav>
     </div>
@@ -181,7 +256,7 @@
   <main id="main">
     <section id="cover" class="cover">
       <div class="cover-inner">
-        <h1 class="cover-title">복잡한 세상, 편하게 살자</h1>
+        <h1 class="cover-title">복잡한 세상 편하게 살자</h1>
         <p class="cover-sub">신입생으로 보낸 1년 돌아보기 (2025)</p>
         <button id="startBtn" class="start-btn" aria-label="사이트 시작">클릭하여 시작</button>
       </div>
@@ -404,7 +479,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      /* 요청하신 설명 데이터 전체 */
+      /* 설명 데이터 */
       const imageDescriptions = {
         // === 3월 ===
         "3-1": "동기들과 카페에 갔는데 너무나도 눈에 띄는 포스트잇을 발견했다.",
@@ -432,7 +507,7 @@
         "5-6": "대부도 가서 칼국수 먹음",
         "5-7": "오랜만에 애들이랑 ㅎㅎ",
         "5-8": "너무너무 재밌었다",
-        "5-9": "7.77초 맞추기 (8명 중에 아무도 못 함)",
+        "5-9": "7.77초 맞추기 (8명인데 아무도 못 함)",
         "5-10": "술 사주는 친구",
         "5-11": "재밌었다~~",
         "5-12": "찬란 LT 주루마블....",
@@ -553,96 +628,121 @@
         "10-41": "찬유야 잘 다녀와 ㅋ"
       };
 
-      // 1. 커버(달력) <-> 그리드 전환
-      const startBtn = document.getElementById('startBtn');
-      const gridSection = document.getElementById('gridSection');
-      const cover = document.getElementById('cover');
-      const logoBtn = document.getElementById('logoBtn');
+      const header = document.querySelector("header.site-header");
+      const cover = document.getElementById("cover");
+      const startBtn = document.getElementById("startBtn");
+      const gridSection = document.getElementById("gridSection");
+      const monthCards = document.querySelectorAll(".month-card");
+      const galleries = document.querySelectorAll(".month-gallery");
+      const logoBtn = document.getElementById("logoBtn");
       
-      // [수정] 헤더 요소 가져오기
-      const siteHeader = document.getElementById('siteHeader');
+      /* Playlist 토글 로직 */
+      const playlistBtn = document.getElementById('playlistBtn');
+      const playlistMenu = document.getElementById('playlistMenu');
 
-      if(startBtn) {
-        startBtn.addEventListener('click', () => {
-          cover.classList.add('hidden');
-          gridSection.classList.remove('hidden');
-          // [수정] 시작 버튼 누르면 헤더 보이기
-          siteHeader.classList.remove('hidden');
-          window.scrollTo({ top: 0, behavior: "smooth" });
+      if(playlistBtn && playlistMenu) {
+        playlistBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          playlistMenu.classList.toggle('active');
         });
-      }
-      if(logoBtn) {
-        logoBtn.addEventListener('click', () => {
-          // 모든 갤러리 닫고 초기화면으로
-          document.querySelectorAll('.month-gallery').forEach(g => g.classList.add('hidden'));
-          cover.classList.remove('hidden');
-          gridSection.classList.add('hidden');
-          
-          // [수정] 처음 화면으로 가면 헤더 다시 숨기기
-          siteHeader.classList.add('hidden');
-          
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-      }
-
-      // 2. 월 선택 시 해당 갤러리 오픈
-      const monthCards = document.querySelectorAll('.month-card');
-      monthCards.forEach(card => {
-        card.addEventListener('click', () => {
-          const month = card.getAttribute('data-month');
-          const targetGallery = document.getElementById(`gallery-${month}`);
-          if(targetGallery) {
-            gridSection.classList.add('hidden');
-            targetGallery.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: "smooth" });
+        document.addEventListener('click', (e) => {
+          if (!playlistBtn.contains(e.target) && !playlistMenu.contains(e.target)) {
+            playlistMenu.classList.remove('active');
           }
         });
+      }
+
+      /* start 버튼 클릭 */
+      if (startBtn) {
+        startBtn.addEventListener("click", () => {
+          cover.classList.add("hidden");
+          gridSection.classList.remove("hidden");
+          header.classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      /* 로고 클릭 */
+      if (logoBtn) {
+        logoBtn.addEventListener("click", () => {
+          // 열려있는 갤러리 닫기
+          galleries.forEach(g => g.classList.add('hidden'));
+          
+          cover.classList.remove("hidden");
+          gridSection.classList.add("hidden");
+          header.classList.add("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      /* 스크롤 시 헤더 변경 */
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 20) header.classList.add("scrolled");
+        else header.classList.remove("scrolled");
       });
 
-      // 3. 갤러리 닫기 버튼
-      const closeButtons = document.querySelectorAll('.close-gallery');
-      closeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          btn.closest('.month-gallery').classList.add('hidden');
-          gridSection.classList.remove('hidden');
+      /* 갤러리 관리 */
+      function openGallery(month) {
+        // 기존 열린 것 닫기
+        galleries.forEach(g => g.classList.add('hidden'));
+
+        const gallery = document.getElementById(`gallery-${month}`);
+        if (gallery) {
+          gallery.classList.remove("hidden");
           window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+
+      /* 월 카드 클릭 -> 갤러리 오픈 */
+      monthCards.forEach(card => {
+        card.addEventListener("click", () => {
+          const month = card.getAttribute("data-month");
+          openGallery(month);
         });
       });
 
-      // 4. 스크롤 시 헤더 배경색 변경
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 20) {
-          siteHeader.classList.add('scrolled');
-        } else {
-          siteHeader.classList.remove('scrolled');
+      /* 갤러리 우측 상단 X 버튼 */
+      galleries.forEach(g => {
+        const closeBtn = g.querySelector(".close-gallery");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => {
+            g.classList.add("hidden");
+            gridSection.classList.remove("hidden"); // 월별 그리드로 복귀
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
         }
       });
 
       // ----------------------------------------------------
-      // 5. 라이트박스 로직 (데이터 연결 + 뒤로가기)
+      // [복구됨] 라이트박스 로직 (뒤로가기 버튼 포함)
       // ----------------------------------------------------
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxCaption = document.getElementById('lightbox-caption');
       const lightboxClose = document.getElementById('lightbox-close');
       const lightboxBack = document.getElementById('lightbox-back');
-      
-      const galleryImages = document.querySelectorAll('.gallery-grid img');
 
-      galleryImages.forEach(img => {
+      // 모든 갤러리 이미지에 클릭 이벤트 추가
+      const allImages = document.querySelectorAll('.gallery-grid img');
+      
+      allImages.forEach(img => {
         img.addEventListener('click', () => {
           const src = img.getAttribute('src');
-          const altKey = img.getAttribute('alt');
-          const captionText = imageDescriptions[altKey] || "";
-
+          const altText = img.getAttribute('alt');
+          const descText = imageDescriptions[altText] || ""; 
+          
+          // 라이트박스 내용 채우기
           lightboxImg.src = src;
-          lightboxCaption.textContent = captionText;
+          lightboxImg.alt = altText;
+          lightboxCaption.textContent = descText;
+          
+          // 라이트박스 열기
           lightbox.classList.add('active');
         });
       });
 
-      // 라이트박스 닫기 기능
-      const closeLightbox = () => {
+      // 라이트박스 닫기 함수
+      function closeLightbox() {
         lightbox.classList.remove('active');
         setTimeout(() => {
           lightboxImg.src = "";
@@ -650,20 +750,21 @@
         }, 300);
       }
 
-      lightboxClose.addEventListener('click', closeLightbox);
-      lightboxBack.addEventListener('click', closeLightbox); // 뒤로가기 버튼도 닫기
+      // X버튼, 뒤로가기 버튼, 배경 클릭 시 닫기
+      if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+      if(lightboxBack) lightboxBack.addEventListener('click', closeLightbox);
       
       lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      // ESC 키
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && lightbox.classList.contains('active')) {
           closeLightbox();
         }
       });
-      
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-          closeLightbox();
-        }
-      });
+
     });
   </script>
 </body>
