@@ -214,6 +214,29 @@
       cursor: pointer; background: none; border: none;
       z-index: 10000;
     }
+
+    /* [추가된 스타일] 좌우 넘기기 버튼 */
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 50px;
+      font-weight: 100;
+      cursor: pointer;
+      z-index: 10000;
+      padding: 20px;
+      opacity: 0.7;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .lightbox-nav:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+    #lightbox-prev { left: 10px; }
+    #lightbox-next { right: 10px; }
     
     #lightbox-back:hover, #lightbox-close:hover {
         transform: scale(1.1);
@@ -473,7 +496,12 @@
   </main>
 
   <div id="lightbox">
-    <button id="lightbox-back">←</button> <button id="lightbox-close">✕</button> <img id="lightbox-img" src="" alt="확대 이미지" />
+    <button id="lightbox-back">←</button> 
+    <button id="lightbox-close">✕</button> 
+    <button id="lightbox-prev" class="lightbox-nav">〈</button>
+    <button id="lightbox-next" class="lightbox-nav">〉</button>
+    
+    <img id="lightbox-img" src="" alt="확대 이미지" />
     <p id="lightbox-caption"></p>
   </div>
 
@@ -714,35 +742,56 @@
       });
 
       // ----------------------------------------------------
-      // [복구됨] 라이트박스 로직 (뒤로가기 버튼 포함)
+      // 라이트박스 로직 (뒤로가기, 닫기 분리 / 좌우 화살표 포함)
       // ----------------------------------------------------
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightbox-img');
       const lightboxCaption = document.getElementById('lightbox-caption');
-      const lightboxClose = document.getElementById('lightbox-close');
-      const lightboxBack = document.getElementById('lightbox-back');
+      
+      const lightboxClose = document.getElementById('lightbox-close'); // X버튼
+      const lightboxBack = document.getElementById('lightbox-back');   // 뒤로가기 버튼
+      const lightboxPrev = document.getElementById('lightbox-prev');   // 이전 버튼
+      const lightboxNext = document.getElementById('lightbox-next');   // 다음 버튼
 
-      // 모든 갤러리 이미지에 클릭 이벤트 추가
       const allImages = document.querySelectorAll('.gallery-grid img');
       
+      // 현재 열려있는 갤러리의 이미지들만 추적하기 위한 변수
+      let currentGalleryImages = []; 
+      let currentIndex = 0; 
+
+      // 이미지 클릭 시 라이트박스 열기
       allImages.forEach(img => {
-        img.addEventListener('click', () => {
-          const src = img.getAttribute('src');
-          const altText = img.getAttribute('alt');
-          const descText = imageDescriptions[altText] || ""; 
+        img.addEventListener('click', (e) => {
+          const clickedImg = e.target;
           
-          // 라이트박스 내용 채우기
-          lightboxImg.src = src;
-          lightboxImg.alt = altText;
-          lightboxCaption.textContent = descText;
-          
-          // 라이트박스 열기
+          // 현재 클릭된 이미지가 속한 갤러리(월) 안의 모든 이미지를 찾습니다.
+          const parentGallery = clickedImg.closest('.month-gallery');
+          if (parentGallery) {
+            currentGalleryImages = Array.from(parentGallery.querySelectorAll('.gallery-grid img'));
+            currentIndex = currentGalleryImages.indexOf(clickedImg); // 클릭한 이미지의 순서 저장
+          }
+
+          updateLightboxContent();
           lightbox.classList.add('active');
         });
       });
 
-      // 라이트박스 닫기 함수
-      function closeLightbox() {
+      // 라이트박스 내용 업데이트 함수
+      function updateLightboxContent() {
+        if (currentGalleryImages.length === 0) return;
+
+        const img = currentGalleryImages[currentIndex];
+        const altText = img.getAttribute('alt');
+        const src = img.getAttribute('src');
+        const descText = imageDescriptions[altText] || "";
+        
+        lightboxImg.src = src;
+        lightboxImg.alt = altText;
+        lightboxCaption.textContent = descText;
+      }
+
+      // [기능 1] 뒤로가기 버튼 및 배경 클릭 -> 단순히 라이트박스만 닫음 (월별 목록으로 복귀)
+      function closeLightboxOnly() {
         lightbox.classList.remove('active');
         setTimeout(() => {
           lightboxImg.src = "";
@@ -750,18 +799,57 @@
         }, 300);
       }
 
-      // X버튼, 뒤로가기 버튼, 배경 클릭 시 닫기
-      if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-      if(lightboxBack) lightboxBack.addEventListener('click', closeLightbox);
+      // [기능 2] X 버튼 클릭 -> 라이트박스 닫고 + 월별 갤러리도 닫고 + 메인 그리드로 이동
+      function closeLightboxAndGallery() {
+        closeLightboxOnly(); // 라이트박스 닫기
+        // 열려있는 모든 월별 갤러리 숨기기
+        galleries.forEach(g => g.classList.add('hidden'));
+        // 메인 그리드 보이기
+        gridSection.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // 이벤트 리스너 연결
+      if(lightboxBack) lightboxBack.addEventListener('click', closeLightboxOnly);
       
+      if(lightboxClose) lightboxClose.addEventListener('click', closeLightboxAndGallery);
+
+      // 배경 클릭 시 -> 뒤로가기와 동일 (목록으로 복귀)
       lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) closeLightbox();
+        if (e.target === lightbox) closeLightboxOnly();
       });
 
-      // ESC 키
+      // [기능 3] 좌우 화살표 클릭
+      if(lightboxPrev) {
+        lightboxPrev.addEventListener('click', (e) => {
+          e.stopPropagation(); // 배경 클릭 이벤트 방지
+          // 이전 인덱스로 이동 (0보다 작으면 마지막 이미지로 순환)
+          currentIndex = (currentIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+          updateLightboxContent();
+        });
+      }
+
+      if(lightboxNext) {
+        lightboxNext.addEventListener('click', (e) => {
+          e.stopPropagation(); // 배경 클릭 이벤트 방지
+          // 다음 인덱스로 이동 (길이 넘으면 0으로 순환)
+          currentIndex = (currentIndex + 1) % currentGalleryImages.length;
+          updateLightboxContent();
+        });
+      }
+
+      // 키보드 이벤트 (ESC: 닫기, 화살표: 이동)
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && lightbox.classList.contains('active')) {
-          closeLightbox();
+        if (!lightbox.classList.contains('active')) return;
+
+        if (e.key === "Escape") {
+          closeLightboxOnly();
+        } else if (e.key === "ArrowLeft") {
+          currentIndex = (currentIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+          updateLightboxContent();
+        } else if (e.key === "ArrowRight") {
+          currentIndex = (currentIndex + 1) % currentGalleryImages.length;
+          updateLightboxContent();
         }
       });
 
